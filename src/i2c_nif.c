@@ -20,6 +20,12 @@
 #include <errno.h>
 #include <string.h>
 
+#if ERL_NIF_MAJOR_VERSION == 2 && ERL_NIF_MINOR_VERSION >= 7
+#define HAS_DIRTY_NIFS 1
+#else
+#warn Old version of Erlang detected. Please update if possible.
+#endif
+
 // I2C NIF Resource.
 struct I2cNifRes {
     int fd;
@@ -236,7 +242,11 @@ static ERL_NIF_TERM i2c_info(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
 
 static ErlNifFunc nif_funcs[] =
 {
+#ifdef HAS_DIRTY_NIFS
     {"open", 1, i2c_open, ERL_NIF_DIRTY_JOB_IO_BOUND},
+#else
+    {"open", 1, i2c_open, 0},
+#endif
     {"read", 3, i2c_read, 0},
     {"write", 3, i2c_write, 0},
     {"write_read", 4, i2c_write_read, 0},
