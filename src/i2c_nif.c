@@ -98,11 +98,15 @@ static ERL_NIF_TERM enif_make_errno_error(ErlNifEnv *env)
         reason = priv->atom_nak;
         break;
 #endif
+    case EISDIR:
+        reason = enif_make_atom(env, "eisdir");
+        break;
     default:
         // strerror isn't usually that helpful, so if these
         // errors happen, please report or update this code
         // to provide a better reason.
         reason = enif_make_atom(env, strerror(errno));
+        debug("enif_make_errno_error called with unexpected errno: %d", errno);
         break;
     }
 
@@ -118,8 +122,10 @@ static ERL_NIF_TERM i2c_open(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
         return enif_make_badarg(env);
 
     int fd = hal_i2c_open(device);
-    if (fd < 0)
+    if (fd < 0) {
+        debug("hal_i2c_open failed: errno=%d", errno);
         return enif_make_errno_error(env);
+    }
 
     struct I2cNifRes *i2c_nif_res = enif_alloc_resource(priv->i2c_nif_res_type, sizeof(struct I2cNifRes));
     i2c_nif_res->fd = fd;
@@ -155,10 +161,8 @@ static ERL_NIF_TERM i2c_read(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     if (!raw_bin_read)
         return enif_make_tuple2(env, priv->atom_error, enif_make_atom(env, "alloc_failed"));
 
-    if (hal_i2c_transfer(res->fd, addr, 0, 0, raw_bin_read, read_len) >= 0) {
+    if (hal_i2c_transfer(res->fd, addr, 0, 0, raw_bin_read, read_len) >= 0)
         return enif_make_tuple2(env, priv->atom_ok, bin_read);
-
-    }
     else
         return enif_make_errno_error(env);
 }
@@ -212,11 +216,11 @@ static ERL_NIF_TERM i2c_write_read(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
     if (!raw_bin_read)
         return enif_make_tuple2(env, priv->atom_error, enif_make_atom(env, "alloc_failed"));
 
-    if (hal_i2c_transfer(res->fd, addr, bin_write.data, bin_write.size, raw_bin_read, read_len) >= 0) {
+    if (hal_i2c_transfer(res->fd, addr, bin_write.data, bin_write.size, raw_bin_read, read_len) >= 0)
         return enif_make_tuple2(env, priv->atom_ok, bin_read);
-    }
     else
         return enif_make_errno_error(env);
+
 }
 
 static ERL_NIF_TERM i2c_close(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
