@@ -20,10 +20,10 @@
 #include <errno.h>
 #include <string.h>
 
-#if ERL_NIF_MAJOR_VERSION == 2 && ERL_NIF_MINOR_VERSION >= 7
+#if ERL_NIF_MAJOR_VERSION == 2 && ERL_NIF_MINOR_VERSION >= 12
 #define HAS_DIRTY_NIFS 1
 #else
-#warn Old version of Erlang detected. Please update if possible.
+#warning Old version of Erlang detected. Please update if possible.
 #endif
 
 // I2C NIF Resource.

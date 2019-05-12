@@ -221,13 +221,17 @@ defmodule Circuits.I2C do
   defp detect_and_print(bus_name, count) do
     IO.puts("Devices on I2C bus \"#{bus_name}\":")
 
-    devices = detect_devices(bus_name)
+    case detect_devices(bus_name) do
+      devices when is_list(devices) ->
+        Enum.each(devices, &IO.puts(" * #{&1}"))
+        IO.puts("")
+        count + length(devices)
 
-    Enum.each(devices, &IO.puts(" * #{&1}"))
-
-    IO.puts("")
-
-    count + length(devices)
+      {:error, reason} ->
+        IO.puts(" Error: #{reason}")
+        IO.puts("")
+        count
+    end
   end
 
   @doc """
