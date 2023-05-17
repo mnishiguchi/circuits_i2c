@@ -1,4 +1,4 @@
-defmodule Circuits.I2C.MixProject do
+defmodule CircuitsV2.I2C.MixProject do
   use Mix.Project
 
   @version "2.0.0-pre.0"
@@ -7,7 +7,8 @@ defmodule Circuits.I2C.MixProject do
 
   def project do
     [
-      app: :circuits_i2c,
+      # temporarily rename the app
+      app: :circuits_v2_i2c,
       version: @version,
       elixir: "~> 1.10",
       description: @description,
@@ -37,7 +38,7 @@ defmodule Circuits.I2C.MixProject do
 
   def application do
     # IMPORTANT: This provides a default at runtime and at compile-time when
-    # circuits_i2c is pulled in as a dependency.
+    # circuits_v2_i2c is pulled in as a dependency.
     [env: [default_backend: default_backend()]]
   end
 
@@ -80,28 +81,28 @@ defmodule Circuits.I2C.MixProject do
   end
 
   defp default_backend(), do: default_backend(Mix.env(), Mix.target())
-  defp default_backend(:test, _target), do: {Circuits.I2C.I2CDev, test: true}
+  defp default_backend(:test, _target), do: {CircuitsV2.I2C.I2CDev, test: true}
 
   defp default_backend(_env, :host) do
     case :os.type() do
-      {:unix, :linux} -> Circuits.I2C.I2CDev
-      _ -> {Circuits.I2C.I2CDev, test: true}
+      {:unix, :linux} -> CircuitsV2.I2C.I2CDev
+      _ -> {CircuitsV2.I2C.I2CDev, test: true}
     end
   end
 
   # Assume Nerves for a default
-  defp default_backend(_env, _not_host), do: Circuits.I2C.I2CDev
+  defp default_backend(_env, _not_host), do: CircuitsV2.I2C.I2CDev
 
   defp set_make_env(_args) do
     # Since user configuration hasn't been loaded into the application
     # environment when `project/1` is called, load it here for building
     # the NIF.
-    backend = Application.get_env(:circuits_i2c, :default_backend, default_backend())
+    backend = Application.get_env(:circuits_v2_i2c, :default_backend, default_backend())
 
-    System.put_env("CIRCUITS_I2C_I2CDEV", i2c_dev_compile_mode(backend))
+    System.put_env("circuits_v2_i2c_I2CDEV", i2c_dev_compile_mode(backend))
   end
 
-  defp i2c_dev_compile_mode({Circuits.I2C.I2CDev, options}) do
+  defp i2c_dev_compile_mode({CircuitsV2.I2C.I2CDev, options}) do
     if Keyword.get(options, :test) do
       "test"
     else
@@ -109,7 +110,7 @@ defmodule Circuits.I2C.MixProject do
     end
   end
 
-  defp i2c_dev_compile_mode(Circuits.I2C.I2CDev) do
+  defp i2c_dev_compile_mode(CircuitsV2.I2C.I2CDev) do
     "normal"
   end
 

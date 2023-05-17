@@ -1,9 +1,9 @@
-defmodule Circuits.I2CTest do
+defmodule CircuitsV2.I2CTest do
   use ExUnit.Case
 
-  alias Circuits.I2C
+  alias CircuitsV2.I2C
 
-  # These tests assume that the Circuits.I2C NIF has been compiled in unit test
+  # These tests assume that the CircuitsV2.I2C NIF has been compiled in unit test
   # mode (MIX_ENV=test). When in this mode, it's possible to open "i2c-test-0" and
   # "i2c-test-1". Address 0x10 returns fake data on "i2c-test-0" and address 0x20 returns
   # fake data on "i2c-test-1". All other devices and addresses return errors.
@@ -20,7 +20,7 @@ defmodule Circuits.I2CTest do
   test "can open all buses" do
     for bus_name <- I2C.bus_names() do
       {:ok, i2c} = I2C.open(bus_name)
-      assert %Circuits.I2C.I2CDev{} = i2c
+      assert %CircuitsV2.I2C.I2CDev{} = i2c
       I2C.close(i2c)
     end
   end
@@ -78,10 +78,10 @@ defmodule Circuits.I2CTest do
   end
 
   test "info/0" do
-    info = Circuits.I2C.info()
+    info = CircuitsV2.I2C.info()
 
     assert is_map(info)
-    assert info.backend == Circuits.I2C.I2CDev
+    assert info.backend == CircuitsV2.I2C.I2CDev
     assert info.test?
   end
 end

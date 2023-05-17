@@ -105,7 +105,7 @@ int test_ioctl(int fd, unsigned long request, void *arg)
 
 #ifdef DEBUG
 #define log_location stderr
-//#define LOG_PATH "/tmp/circuits_i2c.log"
+//#define LOG_PATH "/tmp/circuits_v2_i2c.log"
 #define debug(...) do { enif_fprintf(log_location, __VA_ARGS__); enif_fprintf(log_location, "\r\n"); fflush(log_location); } while(0)
 #define error(...) do { debug(__VA_ARGS__); } while (0)
 #define start_timing() ErlNifTime __start = enif_monotonic_time(ERL_NIF_USEC)
@@ -208,7 +208,7 @@ static ERL_NIF_TERM enif_make_errno_error(ErlNifEnv *env)
 static ERL_NIF_TERM funcs_to_flags(ErlNifEnv *env, unsigned long funcs)
 {
     // Documentation for the funcs is at https://docs.kernel.org/i2c/functionality.html.
-    // We convert them to Circuits.I2C flags since the Circuits.I2C API
+    // We convert them to CircuitsV2.I2C flags since the CircuitsV2.I2C API
     // doesn't use SMBus terminology.
 
     // Only one flag supported now
@@ -416,4 +416,4 @@ static ErlNifFunc nif_funcs[] =
     {"info", 0, i2c_info, 0}
 };
 
-ERL_NIF_INIT(Elixir.Circuits.I2C.Nif, nif_funcs, i2c_load, NULL, NULL, i2c_unload)
+ERL_NIF_INIT(Elixir.CircuitsV2.I2C.Nif, nif_funcs, i2c_load, NULL, NULL, i2c_unload)

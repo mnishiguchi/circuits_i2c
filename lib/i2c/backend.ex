@@ -1,8 +1,8 @@
-defmodule Circuits.I2C.Backend do
+defmodule CircuitsV2.I2C.Backend do
   @moduledoc """
   Backends provide the connection to the real or virtual I2C controller
   """
-  alias Circuits.I2C.Bus
+  alias CircuitsV2.I2C.Bus
 
   @typedoc """
   I2C transfer options

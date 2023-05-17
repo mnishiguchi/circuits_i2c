@@ -1,14 +1,14 @@
-defmodule Circuits.I2C.I2CDev do
+defmodule CircuitsV2.I2C.I2CDev do
   @moduledoc """
-  Circuits.I2C backend for the Linux i2c-dev interface
+  CircuitsV2.I2C backend for the Linux i2c-dev interface
 
   This backend works on Nerves, embedded Linux, and desktop Linux.
   """
-  @behaviour Circuits.I2C.Backend
+  @behaviour CircuitsV2.I2C.Backend
 
-  alias Circuits.I2C.Backend
-  alias Circuits.I2C.Bus
-  alias Circuits.I2C.Nif
+  alias CircuitsV2.I2C.Backend
+  alias CircuitsV2.I2C.Bus
+  alias CircuitsV2.I2C.Nif
 
   defstruct [:ref, :retries, :flags]
 
@@ -17,7 +17,7 @@ defmodule Circuits.I2C.I2CDev do
 
   No supported options
   """
-  case System.get_env("CIRCUITS_I2C_I2CDEV") do
+  case System.get_env("circuits_v2_i2c_I2CDEV") do
     "test" ->
       @impl Backend
       def bus_names(_options), do: ["i2c-test-0", "i2c-test-1", "i2c-flaky"]
@@ -40,7 +40,7 @@ defmodule Circuits.I2C.I2CDev do
   Open an I2C bus
 
   Bus names are typically of the form `"i2c-n"` and available buses may be
-  found by calling `Circuits.I2C.bus_names/0`.
+  found by calling `CircuitsV2.I2C.bus_names/0`.
 
   Options:
 
@@ -67,19 +67,19 @@ defmodule Circuits.I2C.I2CDev do
 
   defimpl Bus do
     @impl Bus
-    def flags(%Circuits.I2C.I2CDev{flags: flags}) do
+    def flags(%CircuitsV2.I2C.I2CDev{flags: flags}) do
       flags
     end
 
     @impl Bus
-    def read(%Circuits.I2C.I2CDev{ref: ref, retries: retries}, address, count, options) do
+    def read(%CircuitsV2.I2C.I2CDev{ref: ref, retries: retries}, address, count, options) do
       retries = Keyword.get(options, :retries, retries)
 
       Nif.read(ref, address, count, retries)
     end
 
     @impl Bus
-    def write(%Circuits.I2C.I2CDev{ref: ref, retries: retries}, address, data, options) do
+    def write(%CircuitsV2.I2C.I2CDev{ref: ref, retries: retries}, address, data, options) do
       retries = Keyword.get(options, :retries, retries)
 
       Nif.write(ref, address, data, retries)
@@ -87,7 +87,7 @@ defmodule Circuits.I2C.I2CDev do
 
     @impl Bus
     def write_read(
-          %Circuits.I2C.I2CDev{ref: ref, retries: retries},
+          %CircuitsV2.I2C.I2CDev{ref: ref, retries: retries},
           address,
           write_data,
           read_count,
@@ -99,7 +99,7 @@ defmodule Circuits.I2C.I2CDev do
     end
 
     @impl Bus
-    def close(%Circuits.I2C.I2CDev{ref: ref}) do
+    def close(%CircuitsV2.I2C.I2CDev{ref: ref}) do
       Nif.close(ref)
     end
   end

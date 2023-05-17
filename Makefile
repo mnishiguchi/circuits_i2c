@@ -8,7 +8,7 @@
 # Variables to override:
 #
 # MIX_APP_PATH  path to the build directory
-# CIRCUITS_I2C_I2CDEV Backend to build - `"normal"`, `"test"`, or `"disabled"` will build a NIF
+# circuits_v2_i2c_I2CDEV Backend to build - `"normal"`, `"test"`, or `"disabled"` will build a NIF
 #
 # CC            C compiler
 # CROSSCOMPILE	crosscompiler prefix, if any
@@ -36,8 +36,8 @@ LDFLAGS += -fPIC -shared
 else
 CFLAGS += -Ic_src/compat
 LDFLAGS += -undefined dynamic_lookup -dynamiclib
-ifeq ($(CIRCUITS_I2C_I2CDEV),normal)
-$(error Circuits.I2C Linux I2CDev backend is not supported on non-Linux platforms. Review circuits_i2c backend configuration or report an issue if improperly detected.)
+ifeq ($(circuits_v2_i2c_I2CDEV),normal)
+$(error CircuitsV2.I2C Linux I2CDev backend is not supported on non-Linux platforms. Review circuits_v2_i2c backend configuration or report an issue if improperly detected.)
 endif
 endif
 else
@@ -46,10 +46,10 @@ LDFLAGS += -fPIC -shared
 CFLAGS += -fPIC
 endif
 
-ifeq ($(CIRCUITS_I2C_I2CDEV),normal)
+ifeq ($(circuits_v2_i2c_I2CDEV),normal)
 # Enable real I2C calls. This is the default and works with Nerves
 else
-ifeq ($(CIRCUITS_I2C_I2CDEV),test)
+ifeq ($(circuits_v2_i2c_I2CDEV),test)
 # Stub out ioctls and send back test data
 CFLAGS += -DTEST_BACKEND
 else

@@ -1,9 +1,9 @@
-defmodule Circuits.I2C do
+defmodule CircuitsV2.I2C do
   @moduledoc """
-  `Circuits.I2C` lets you communicate with hardware devices using the I2C
+  `CircuitsV2.I2C` lets you communicate with hardware devices using the I2C
   protocol.
   """
-  alias Circuits.I2C.Bus
+  alias CircuitsV2.I2C.Bus
 
   # Public API
 
@@ -26,7 +26,7 @@ defmodule Circuits.I2C do
   @type present?() :: (Bus.t(), address() -> boolean())
 
   @typedoc """
-  Backends specify an implementation of a Circuits.I2C.Backend behaviour
+  Backends specify an implementation of a CircuitsV2.I2C.Backend behaviour
 
   The second parameter of the Backend 2-tuple is a list of options. These are
   passed to the behaviour function call implementations.
@@ -59,12 +59,12 @@ defmodule Circuits.I2C do
   I2C bus names depend on the platform. Names are of the form "i2c-n" where the
   "n" is the bus number.  The correct bus number can be found in the
   documentation for the device or on a schematic. Another option is to call
-  `Circuits.I2C.bus_names/0` to list them for you.
+  `CircuitsV2.I2C.bus_names/0` to list them for you.
 
   The same I2C bus may be opened more than once. There is no need to share
   it between modules.
 
-  On success, this returns a `Circuits.I2C.Bus.t()` struct for accessing the
+  On success, this returns a `CircuitsV2.I2C.Bus.t()` struct for accessing the
   I2C bus. Use this in subsequent calls to read and write I2C devices.
 
   Options depend on the backend. The following are for the I2CDev (default)
@@ -171,7 +171,7 @@ defmodule Circuits.I2C do
   look in the advanced options.
 
   ```elixir
-  iex> Circuits.I2C.bus_names()
+  iex> CircuitsV2.I2C.bus_names()
   ["i2c-1"]
   ```
   """
@@ -190,7 +190,7 @@ defmodule Circuits.I2C do
   with other code.
 
   ```elixir
-  iex> Circuits.I2C.detect_devices("i2c-1")
+  iex> CircuitsV2.I2C.detect_devices("i2c-1")
   [4]
   ```
 
@@ -351,8 +351,8 @@ defmodule Circuits.I2C do
   def info({backend, _options}), do: backend.info()
 
   defp default_backend() do
-    case Application.get_env(:circuits_i2c, :default_backend) do
-      nil -> {Circuits.I2C.NilBackend, []}
+    case Application.get_env(:circuits_v2_i2c, :default_backend) do
+      nil -> {CircuitsV2.I2C.NilBackend, []}
       m when is_atom(m) -> {m, []}
       {m, o} = value when is_atom(m) and is_list(o) -> value
     end

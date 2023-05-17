@@ -1,15 +1,15 @@
-defmodule Circuits.I2CDevTest do
+defmodule CircuitsV2.I2CDevTest do
   use ExUnit.Case
 
-  alias Circuits.I2C.Bus
-  alias Circuits.I2C.I2CDev
+  alias CircuitsV2.I2C.Bus
+  alias CircuitsV2.I2C.I2CDev
 
   describe "info/0" do
     test "info identifies as a i2c_dev_test and not a real i2c driver" do
       info = I2CDev.info()
 
       assert is_map(info)
-      assert info.backend == Circuits.I2C.I2CDev
+      assert info.backend == CircuitsV2.I2C.I2CDev
     end
   end
 

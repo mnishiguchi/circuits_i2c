@@ -1,4 +1,4 @@
-defprotocol Circuits.I2C.Bus do
+defprotocol CircuitsV2.I2C.Bus do
   @moduledoc """
   A bus is the connection to a real or virtual I2C controller
   """
@@ -26,7 +26,7 @@ defprotocol Circuits.I2C.Bus do
 
   See the implementation for options
   """
-  @spec read(t(), Circuits.I2C.address(), non_neg_integer(), keyword()) ::
+  @spec read(t(), CircuitsV2.I2C.address(), non_neg_integer(), keyword()) ::
           {:ok, binary()} | {:error, term()}
   def read(bus, address, count, options)
 
@@ -35,7 +35,7 @@ defprotocol Circuits.I2C.Bus do
 
   The controller should write the passed in data to the specified I2C address.
   """
-  @spec write(t(), Circuits.I2C.address(), iodata(), keyword()) :: :ok | {:error, term()}
+  @spec write(t(), CircuitsV2.I2C.address(), iodata(), keyword()) :: :ok | {:error, term()}
   def write(bus, address, data, options)
 
   @doc """
@@ -45,7 +45,7 @@ defprotocol Circuits.I2C.Bus do
   to a device and then reading its contents. The controller should perform it
   as one transaction without a stop condition between the write and read.
   """
-  @spec write_read(t(), Circuits.I2C.address(), iodata(), non_neg_integer(), keyword()) ::
+  @spec write_read(t(), CircuitsV2.I2C.address(), iodata(), non_neg_integer(), keyword()) ::
           {:ok, binary()} | {:error, term()}
   def write_read(bus, address, write_data, read_count, options)
 
@@ -53,7 +53,7 @@ defprotocol Circuits.I2C.Bus do
   Free up resources associated with the bus
 
   Well behaved backends free up their resources with the help of the Erlang garbage collector. However, it is good
-  practice for users to call `Circuits.I2C.close/1` (and hence this function) so that
+  practice for users to call `CircuitsV2.I2C.close/1` (and hence this function) so that
   limited resources are freed before they're needed again.
   """
   @spec close(t()) :: :ok

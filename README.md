@@ -1,15 +1,15 @@
-# Circuits.I2C
+# CircuitsV2.I2C
 
-[![Hex version](https://img.shields.io/hexpm/v/circuits_i2c.svg "Hex version")](https://hex.pm/packages/circuits_i2c)
-[![API docs](https://img.shields.io/hexpm/v/circuits_i2c.svg?label=hexdocs "API docs")](https://hexdocs.pm/circuits_i2c/Circuits.I2C.html)
-[![CircleCI](https://circleci.com/gh/elixir-circuits/circuits_i2c.svg?style=svg)](https://circleci.com/gh/elixir-circuits/circuits_i2c)
+[![Hex version](https://img.shields.io/hexpm/v/circuits_v2_i2c.svg "Hex version")](https://hex.pm/packages/circuits_v2_i2c)
+[![API docs](https://img.shields.io/hexpm/v/circuits_v2_i2c.svg?label=hexdocs "API docs")](https://hexdocs.pm/circuits_v2_i2c/CircuitsV2.I2C.html)
+[![CircleCI](https://circleci.com/gh/elixir-circuits/circuits_v2_i2c.svg?style=svg)](https://circleci.com/gh/elixir-circuits/circuits_v2_i2c)
 
-`Circuits.I2C` lets you communicate with hardware devices using the I2C protocol.
+`CircuitsV2.I2C` lets you communicate with hardware devices using the I2C protocol.
 
 *This is the v2.0 development branch. It's not ready yet. Most users will want
-to follow the [maint-v1.x branch](https://github.com/elixir-circuits/circuits_i2c/tree/maint-v1.x).*
+to follow the [maint-v1.x branch](https://github.com/elixir-circuits/circuits_v2_i2c/tree/maint-v1.x).*
 
-`Circuits.I2C` v2.0  is an almost backwards compatible update to `Circuits.I2C`
+`CircuitsV2.I2C` v2.0  is an almost backwards compatible update to `CircuitsV2.I2C`
 v1.x. Here's what's new:
 
 * Linux or Nerves are no longer required. In fact, the NIF supporting them won't
@@ -18,29 +18,29 @@ v1.x. Here's what's new:
   [CircuitsSim](https://github.com/elixir-circuits/circuits_sim)
 * Use USB->I2C adapters for development on your laptop (Coming soon)
 
-If you've used `Circuits.I2C` v1.x, nearly all of your code will be the same. If
+If you've used `CircuitsV2.I2C` v1.x, nearly all of your code will be the same. If
 you're a library author, we'd appreciate if you could try this out and update
-your `:circuits_i2c` dependency to allow v2.0. Details can be found in our
+your `:circuits_v2_i2c` dependency to allow v2.0. Details can be found in our
 [porting guide](PORTING.md).
 
 ## Getting started on Nerves and Linux
 
-By default, `Circuits.I2C` supports the Linux-based I2C driver interface so the
+By default, `CircuitsV2.I2C` supports the Linux-based I2C driver interface so the
 following instructions assume a Linux-based system like Nerves, Raspberry Pi OS,
 embedded Linux or even desktop Linux if I2C lines are exposed. If you want to
-use `Circuits.I2C` on a different platform and support is available, generally
+use `CircuitsV2.I2C` on a different platform and support is available, generally
 the only difference is to change the "open" call. The rest is the same.
 
-First off, add `circuits_i2c` to your `mix.exs`'s dependency list like any other
+First off, add `circuits_v2_i2c` to your `mix.exs`'s dependency list like any other
 Elixir library:
 
 ```elixir
 def deps do
-  [{:circuits_i2c, "~> 2.0"}]
+  [{:circuits_v2_i2c, "~> 2.0"}]
 end
 ```
 
-`Circuits.I2C` doesn't load device drivers, so you may need to load them
+`CircuitsV2.I2C` doesn't load device drivers, so you may need to load them
 beforehand. If you are using Nerves on a supported platform, this is enabled for
 you already. If using Raspberry Pi OS, the [Adafruit Raspberry Pi I2C
 instructions](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
@@ -72,8 +72,8 @@ Here's a simple example of using it.
 ```elixir
 # On the Raspberry Pi, the IO expander is connected to I2C bus 1 (i2c-1).
 # Its 7-bit address is 0x20. (see datasheet)
-iex> alias Circuits.I2C
-Circuits.I2C
+iex> alias CircuitsV2.I2C
+CircuitsV2.I2C
 iex> {:ok, ref} = I2C.open("i2c-1")
 {:ok, #Reference<...>}
 
@@ -109,12 +109,12 @@ iex> I2C.write_read(ref, 0x20, <<9>>, 1)
 
 ## Creating a new backend
 
-`Circuits.I2C` supports alternative backends to support non-Linux hardware,
+`CircuitsV2.I2C` supports alternative backends to support non-Linux hardware,
 testing, and simulation. A backend can support communication on more than one
 I2C bus.
 
-To create a new backend, you need to implement the `Circuits.I2C.Backend`
-behaviour. `Circuits.I2C` calls the `bus_names/1` callback to discover what I2C
+To create a new backend, you need to implement the `CircuitsV2.I2C.Backend`
+behaviour. `CircuitsV2.I2C` calls the `bus_names/1` callback to discover what I2C
 buses are available and then it calls the `open/2` callback to use the I2C bus.
 
 ## FAQ
@@ -125,7 +125,7 @@ The most common issue is communicating with an I2C for the first time.  For I2C,
 first check that an I2C bus is available:
 
 ```elixir
-iex> Circuits.I2C.bus_names
+iex> CircuitsV2.I2C.bus_names
 ["i2c-1"]
 ```
 
@@ -140,8 +140,8 @@ kernel and that the device tree configures it.
 Once an I2C bus is available, try detecting devices on it:
 
 ```elixir
-iex> Circuits.I2C.detect_devices()
-Circuits.I2C.detect_devices
+iex> CircuitsV2.I2C.detect_devices()
+CircuitsV2.I2C.detect_devices
 Devices on I2C bus "i2c-1":
  * 64  (0x40)
  * 112 (0x70)
@@ -169,7 +169,7 @@ Other things to check:
 * Can you reduce the total number of bytes in each transaction? For example, do
   you need to read a particular register? Is there a mode that the device can be
   put it so that it only returns useful data?
-* Can a write and read be combined? The `Circuits.I2C.write_read` function is
+* Can a write and read be combined? The `CircuitsV2.I2C.write_read` function is
   more efficient than a separate write followed by a read.
 * Does the device support a queue mode? Some devices have internal queues that
   allow the host to copy out more than one sample each time.
@@ -177,7 +177,7 @@ Other things to check:
 ### Where can I get help?
 
 The hardest part is communicating with a device for the first time. The issue is
-usually unrelated to `Circuits.I2C`. If you expand your searches to include
+usually unrelated to `CircuitsV2.I2C`. If you expand your searches to include
 Python and C forums, you'll frequently find the answer.
 
 If that fails, try posting a question to the [Elixir
@@ -185,14 +185,14 @@ Forum](https://elixirforum.com/). Tag the question with `Nerves` and it will
 have a good chance of getting to the right people. Feel free to do this even if
 you're not using Nerves.
 
-### Can I develop code that uses Circuits.I2C on my laptop?
+### Can I develop code that uses CircuitsV2.I2C on my laptop?
 
 You have a few options:
 
 1. Connect your I2C devices to a USB->I2C adapter like a [Adafruit FT232H
    Breakout](https://www.adafruit.com/product/2264)
 2. Use the CircuitsSim backend
-3. Create a custom backend and use it to mock interactions with the Circuits.I2C
+3. Create a custom backend and use it to mock interactions with the CircuitsV2.I2C
    API
 
 ### Will it run on Arduino?
